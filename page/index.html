@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}CineLog — My Watch Log{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <div>
+    <h1 class="page-heading">My Watch Log</h1>
+    <p class="page-sub" style="margin-bottom:0">{{ entries|length }} entr{{ 'y' if entries|length == 1 else 'ies' }}</p>
+  </div>
+  <form class="sort-form" method="GET" action="/">
+    <label>Sort by</label>
+    <select name="sort_by" onchange="this.form.submit()">
+      <option value="date_watched" {% if sort_by=='date_watched' %}selected{% endif %}>Date Watched</option>
+      <option value="rating"       {% if sort_by=='rating'       %}selected{% endif %}>Rating</option>
+      <option value="title"        {% if sort_by=='title'        %}selected{% endif %}>Title</option>
+      <option value="type"         {% if sort_by=='type'         %}selected{% endif %}>Type</option>
+      <option value="genre"        {% if sort_by=='genre'        %}selected{% endif %}>Genre</option>
+    </select>
+    <select name="order" onchange="this.form.submit()">
+      <option value="DESC" {% if order=='DESC' %}selected{% endif %}>↓ Desc</option>
+      <option value="ASC"  {% if order=='ASC'  %}selected{% endif %}>↑ Asc</option>
+    </select>
+  </form>
+</div>
+
+{% if entries %}
+  {% set movies = entries|selectattr('type','equalto','Movie')|list %}
+  {% set shows  = entries|selectattr('type','equalto','TV Show')|list %}
+  {% set rated  = entries|selectattr('rating')|list %}
+  {% set avg    = (rated|map(attribute='rating')|sum / rated|length)|round(1) if rated else 0 %}
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num">{{ entries|length }}</div><div class="stat-label">Total</div></div>
+    <div class="stat"><div class="stat-num">{{ movies|length }}</div><div class="stat-label">Movies</div></div>
+    <div class="stat"><div class="stat-num">{{ shows|length }}</div><div class="stat-label">TV Shows</div></div>
+    <div class="stat"><div class="stat-num">{{ avg }}</div><div class="stat-label">Avg Rating</div></div>
+  </div>
+
+  <div class="entry-grid">
+    {% for e in entries %}
+    <div class="card entry-card">
+      <div class="card-header">
+        <div class="entry-title">{{ e['title'] }}</div>
+        <span class="badge {{ 'badge-movie' if e['type']=='Movie' else 'badge-tv' }}">{{ e['type'] }}</span>
+      </div>
+      <div class="entry-meta">
+        {% if e['genre'] %}<span class="entry-genre">{{ e['genre'] }}</span>{% endif %}
+        {% if e['rating'] %}
+        <span class="stars">
+          {% for i in range(1,6) %}
+            {% if i <= e['rating'] %}★{% else %}<span class="empty">★</span>{% endif %}
+          {% endfor %}
+        </span>
+        {% endif %}
+        {% if e['date_watched'] %}<span class="entry-date">{{ e['date_watched'] }}</span>{% endif %}
+      </div>
+      {% if e['notes'] %}<p class="entry-notes">{{ e['notes'] }}</p>{% endif %}
+      <div class="entry-actions">
+        <a href="/edit/{{ e['id'] }}" class="btn btn-ghost btn-sm">Edit</a>
+        <form method="POST" action="/delete/{{ e['id'] }}" onsubmit="return confirm('Delete « {{ e['title'] }} »?')">
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <div class="icon">🎬</div>
+    <h3>Nothing logged yet</h3>
+    <p style="margin-bottom:1.5rem">Start building your watch history.</p>
+    <a href="/add" class="btn btn-primary">Add your first entry</a>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}CineLog — Add Entry{% endblock %}
+
+
+
+{% block content %}
+<div class="form-card">
+  <h1 class="page-heading">Add Entry</h1>
+  <p class="page-sub">Log a movie or TV show you've watched.</p>
+
+  <div class="card">
+    <form method="POST" action="/add">
+      <div class="form-group">
+        <label for="title">Title *</label>
+        <input type="text" id="title" name="title" placeholder="e.g. Dune: Part Two" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="type">Type *</label>
+          <select id="type" name="type" required>
+            <option value="Movie">Movie</option>
+            <option value="TV Show">TV Show</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Genre <span style="text-transform:none;font-size:0.75rem;color:var(--muted)">(pick one or more)</span></label>
+          <div class="genre-pills">
+            {% for g in genres %}
+            <label class="pill">
+              <input type="checkbox" name="genre" value="{{ g }}">
+              {{ g }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Rating</label>
+          <!-- RTL star trick: highest value first, CSS handles the fill direction -->
+          <div class="star-input">
+            <input type="radio" id="s5" name="rating" value="5"><label for="s5" title="5 stars">★</label>
+            <input type="radio" id="s4" name="rating" value="4"><label for="s4" title="4 stars">★</label>
+            <input type="radio" id="s3" name="rating" value="3"><label for="s3" title="3 stars">★</label>
+            <input type="radio" id="s2" name="rating" value="2"><label for="s2" title="2 stars">★</label>
+            <input type="radio" id="s1" name="rating" value="1"><label for="s1" title="1 star">★</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="date_watched">Date Watched</label>
+          <input type="date" id="date_watched" name="date_watched">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" placeholder="Thoughts, quotes, recommendations…"></textarea>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem">
+        <a href="/" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save Entry</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

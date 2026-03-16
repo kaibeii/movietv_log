@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}CineLog — Edit Entry{% endblock %}
+
+
+
+{% block content %}
+<div class="form-card">
+  <h1 class="page-heading">Edit Entry</h1>
+  <p class="page-sub">Updating <em>{{ entry['title'] }}</em></p>
+
+  <div class="card">
+    <form method="POST" action="/edit/{{ entry['id'] }}">
+      <div class="form-group">
+        <label for="title">Title *</label>
+        <input type="text" id="title" name="title" value="{{ entry['title'] }}" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="type">Type *</label>
+          <select id="type" name="type" required>
+            <option value="Movie"   {% if entry['type']=='Movie'   %}selected{% endif %}>Movie</option>
+            <option value="TV Show" {% if entry['type']=='TV Show' %}selected{% endif %}>TV Show</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Genre <span style="text-transform:none;font-size:0.75rem;color:var(--muted)">(pick one or more)</span></label>
+          {% set selected_genres = entry['genre'].split(', ') if entry['genre'] else [] %}
+          <div class="genre-pills">
+            {% for g in genres %}
+            <label class="pill">
+              <input type="checkbox" name="genre" value="{{ g }}" {% if g in selected_genres %}checked{% endif %}>
+              {{ g }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Rating</label>
+          <div class="star-input">
+            {% for star in [5,4,3,2,1] %}
+            <input type="radio" id="s{{ star }}" name="rating" value="{{ star }}"
+              {% if entry['rating'] == star %}checked{% endif %}>
+            <label for="s{{ star }}" title="{{ star }} star{{ 's' if star>1 }}">★</label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="date_watched">Date Watched</label>
+          <input type="date" id="date_watched" name="date_watched" value="{{ entry['date_watched'] or '' }}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes">{{ entry['notes'] or '' }}</textarea>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem">
+        <a href="/" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-primary">Update Entry</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
