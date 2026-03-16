@@ -70,14 +70,16 @@ Click the **Delete** button on any card. A confirmation dialog appears before th
 ## File Structure
 
 ```
-movie_log/
-├── app.py          # Flask routes
-├── database.py     # SQLite helper functions (all CRUD logic)
-├── movie_log.db    # Created automatically on first run
-└── templates/
-    ├── base.html   # Shared layout & styles
-    ├── index.html  # Home — list & sort all entries
-    ├── add.html    # Add new entry form
-    ├── edit.html   # Edit existing entry form
-    └── search.html # Filter/search page
-```
+movietv_sql/
+├── app.py              # Flask routes
+├── database.py         # SQLite helper functions (all CRUD logic)
+├── movie_log.db        # Created automatically on first run
+├── static/
+│   ├── styles.css      # All CSS styles
+│   └── OffBit-DotBold.ttf  # Custom font
+└── page/
+    ├── base.html       # Shared layout, links to styles.css
+    ├── index.html      # Home — list & sort all entries
+    ├── add.html        # Add new entry form
+    ├── edit.html       # Edit existing entry form
+    └── search.html     # Filter/search page
