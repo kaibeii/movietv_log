@@ -54,9 +54,9 @@ The home page (`/`) displays all logged entries as cards. Use the **Sort by** an
 
 ### Read (filtered) — Search
 Click **Search** in the nav. Filter by:
-- Title keyword (partial match)
+- Title keyword
 - Type (Movie / TV Show)
-- Genre (populated from your existing entries)
+- Genre 
 - Minimum star rating
 
 ### Update — Edit an Entry
